@@ -7,30 +7,49 @@
                     <div class="col-md-8 left">
                         <p class="heading-pg">Targets</p>
 
-                        <% setTarget.forEach(function(i){ %>
-                            <div>
 
-                                <h4>
-                                    <%= i.category_set_trgt.toString() %>
-                                </h4>
-                                <h4>
-                                    <%= i.title_set_trgt%>
-                                </h4>
-                                <h4>
-                                    <%= i.indexing %>
-                                </h4>
-                                <h4>
-                                    <%= i.achievement_date_set_trgt %>
-                                </h4>
 
-                            </div>
-                            <% }); %>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Indexing</th>
+                                        <th scope="col">Date</th>
+
+                                    </tr>
+                                </thead>
+                                <% setTarget.forEach(function(i){ %>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"></th>
+                                            <td>
+                                                <%= i.category_set_trgt.toString() %>
+                                            </td>
+                                            <td>
+                                                <%= i.title_set_trgt%>
+                                            </td>
+                                            <td>
+                                                <%= i.indexing %>
+                                            </td>
+                                            <td>
+                                                <%= i.achievement_date_set_trgt %>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <% }); %>
+                            </table>
+
+
+                        </div>
+
+
 
                     </div>
                     <div class="col-md-2">
                         <%- include("partials/profile.ejs") %>
                     </div>
             </div>
-        </div>
-        </div>
-        <%- include("partials/footer.ejs") %>
+            <%- include("partials/footer.ejs") %>
