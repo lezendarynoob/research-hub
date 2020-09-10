@@ -1,21 +1,36 @@
-<%- include("partials/header.ejs") %>
-    <h1>Set Target Page</h1>
-    <% setTarget.forEach(function(i){ %>
-        <div>
-           
-            <h4>
-                <%= i.category_set_trgt.toString() %>
-            </h4>
-            <h4>
-                <%= i.title_set_trgt%>
-            </h4>
-            <h4>
-                <%= i.indexing %>
-            </h4>
-            <h4>
-                <%= i.achievement_date_set_trgt %>
-            </h4>
-            
+<%- include("partials/footer.ejs") %>
+
+    <%- include("partials/header.ejs") %>
+        <div class="container-fluid">
+            <div class="row">
+                <%- include("partials/navbar.ejs") %>
+                    <div class="col-md-8 left">
+                        <p class="heading-pg">Targets</p>
+
+                        <% setTarget.forEach(function(i){ %>
+                            <div>
+
+                                <h4>
+                                    <%= i.category_set_trgt.toString() %>
+                                </h4>
+                                <h4>
+                                    <%= i.title_set_trgt%>
+                                </h4>
+                                <h4>
+                                    <%= i.indexing %>
+                                </h4>
+                                <h4>
+                                    <%= i.achievement_date_set_trgt %>
+                                </h4>
+
+                            </div>
+                            <% }); %>
+
+                    </div>
+                    <div class="col-md-2">
+                        <%- include("partials/profile.ejs") %>
+                    </div>
+            </div>
         </div>
-        <% }); %>
-            <%- include("partials/footer.ejs") %>
+        </div>
+        <%- include("partials/footer.ejs") %>
