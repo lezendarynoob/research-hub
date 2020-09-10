@@ -1,5 +1,4 @@
-
-    <%- include("partials/header.ejs") %>
+<%- include("partials/header.ejs") %>
     <div class="container-fluid">
         <div class="row">
             <%- include("partials/navbar.ejs") %>
@@ -7,16 +6,19 @@
                     <p class="heading-pg">Create Publication</p>
 
                     <form action="/publication" method="POST">
-                        
+
 
 
                         <div class="form-group col-md-8">
                             <label for="category">Category</label>
                             <select class="custom-select" name="category" placeholder="category">
-                            <option selected>Open this select menu</option>
-                            <option value="One">One</option>
-                            <option value="Two">Two</option>
-                            <option value="Third">Three</option>
+                                    <option value="International Journal">International Journal</option>
+                                    <option value="National Journal">National Journal</option>
+                                    <option value="Book Chapter">Book Chapter</option>
+                                    <option value="Edited Book">Edited Book</option>
+                                    <option value="National Conference">National Conference</option>
+                                    <option value="International Conference">International Conference</option>
+                                    <option value="Patent">Patent</option>
                             </select>
 
                         </div>
