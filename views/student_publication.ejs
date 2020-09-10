@@ -1,0 +1,103 @@
+<%- include("partials/footer.ejs") %>
+    <%- include("partials/header.ejs") %>
+        <div class="container-fluid">
+            <div class="row">
+                <%- include("partials/navbar.ejs") %>
+                    <div class="col-md-8 left">
+                        <p class="heading-pg">Create Student Publication</p>
+
+                        <form action="/research" method="POST">
+                            <!-- <input type="text" name="Title" placeholder="Title">
+                            <input type="text" name="Author" placeholder="Author">
+                            <input type="text" name="GScholarId" placeholder="Google Scholar Id">
+                            <input type="text" name="ScopusId" placeholder="Scopus Id">
+                            <input type="text" name="url" placeholder="URL to"> -->
+
+                            <div class="form-group  col-md-8">
+                                <label for="Student Name">Student Name</label>
+                                <input type="text" class="form-control" name="student_name" placeholder="Student Name">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="Student Enrollment Number">Student Enrollment Number</label>
+                                <input type="text" class="form-control" name="enrollment_number" placeholder="Enrollment Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="Student Admission Number">Student Admission Number</label>
+                                <input type="text" class="form-control" name="admission_number" placeholder="Admission Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="Semester">Semester</label>
+                                <input type="number" class="form-control" name="Semester" placeholder="Semester">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="Program">Program</label>
+                                <input type="text" class="form-control" name="program_studpub" placeholder="Program">
+                            </div>
+
+
+                            <div class="form-group col-md-8">
+                                <label for="category">Category</label>
+                                <select class="custom-select" name="category_studpub" placeholder="category">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                                </select>
+
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="AuthorName">Author Name</label>
+                                <input type="text" class="form-control" name="author_studpub" placeholder="Author's Name">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Publication Title</label>
+                                <input type="text" class="form-control" name="title_studpub" placeholder="Title of your Publication">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="journal/conference_name">Journal / Conference Name</label>
+                                <input type="text" class="form-control" name="journal_name_studpub" placeholder="Name of Journal / Conference">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Publication Title</label>
+                                <input type="text" class="form-control" name="publication_title_studpub" placeholder="Publication Title">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Volume Number</label>
+                                <input type="text" class="form-control" name="volume_number_studpub" placeholder="Volume Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Issue Number</label>
+                                <input type="text" class="form-control" name="issue_number_studpub" placeholder="Issue Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Page Number</label>
+                                <input type="text" class="form-control" name="page_number_studpub" placeholder="Page Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">ISSN Number</label>
+                                <input type="text" class="form-control" name="issn_number_studpub" placeholder="ISSN Number">
+                            </div>
+                            <div class="form-group  col-md-8">
+                                <label for="title_of_paper">Indexing</label>
+                                <input type="text" class="form-control" name="indexing_studpub" placeholder="Indexing">
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="file_upload">Upload Document</label>
+                            </div>
+                            <div class="custom-file col-md-8">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="col-md-8">
+                                <button class="btn btn-primary">Submit!</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <%- include("partials/profile.ejs") %>
+                    </div>
+            </div>
+        </div>
+        </div>

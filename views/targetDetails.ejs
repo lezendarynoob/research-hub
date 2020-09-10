@@ -1,0 +1,21 @@
+<%- include("partials/header.ejs") %>
+    <h1>Set Target Page</h1>
+    <% setTarget.forEach(function(i){ %>
+        <div>
+           
+            <h4>
+                <%= i.category_set_trgt.toString() %>
+            </h4>
+            <h4>
+                <%= i.title_set_trgt%>
+            </h4>
+            <h4>
+                <%= i.indexing %>
+            </h4>
+            <h4>
+                <%= i.achievement_date_set_trgt %>
+            </h4>
+            
+        </div>
+        <% }); %>
+            <%- include("partials/footer.ejs") %>

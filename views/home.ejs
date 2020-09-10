@@ -1,23 +1,16 @@
-
 <%- include("partials/header.ejs") %>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-9 left">
+    <div class="container-fluid">
+        <div class="row">
+            <%- include("partials/navbar.ejs") %>
+                <div class="col-md-8 left">
                     <div class="media mx-lg-5 mt-5">
                         <div class="media-body p-5">
                             <h5 class="mt-0 mb-1 heading">Welcome back Aryan!</h5>
                             <p class="d-none d-lg-block">
-                                You have completed 70% of your goal this month!. Keep it up and
-                                improve your results!
+                                You have completed 70% of your goal this month!.<br> Keep it up and improve your results!
                             </p>
                         </div>
                         <img src="/images/hooman.png" class="m-5 hooman img-fluid" alt="..." />
-                    </div>
-                    <div class="media mx-lg-5 d-block d-lg-none mt-2">
-                        <div class="media-body p-4">
-                            You have completed 70% of your goal this month!. Keep it up and
-                            improve your results!
-                        </div>
                     </div>
                     <div class="m-5">
                         <div class="row">
@@ -66,56 +59,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
-                <div class="sidebar">
-        <div class="container-fluid">
-            <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-            <div class="nav nav-sidebar">
-                <a href="#" class="logout">Logout</a>
-                <div class="abc">
-                    <img class="person-clipart" src="data:image/png;base64,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" alt="person">
-                    <p class="faculty-Name">Aryan Mehrotra</p> 
-                    <h2  class="Designation">Designation</h2>
+                <div class="col-md-2">
+                    <%- include("partials/profile.ejs") %>
                 </div>
-                <div class="info">
-                <div >
-                    <p><span class="genre">GU ID :</span><span class="value">122343253532123</span></p>
-                </div>
-                <div>
-                    <p><span class="genre">School :</span><span class="value">School of Computer Science and Engineering</span></p> 
-                </div>
-                <div>
-                    <p><span class="genre">Reward points :</span><span class="value">44</span></p> 
-                </div>
-                <div>
-                    <p><span class="genre">Web of Science :</span><span class="value">122343253532123</span></p> 
-                </div>
-                <div>
-                    <p><span class="genre">Scorpus :</span><span class="value">122343253532123</span></p> 
-                </div>
-                <div>
-                    <p><span class="genre">Google Scholar :</span><span class="value">122343253532123</span></p> 
-                </div>
-                <div>
-                    <p><span class="genre">orchid :</span><span class="value">122343253532123</span></p> 
-                </div>
-            </div>
-               
-                
-    
-                
-                
-        </div>
-            </div>
         </div>
     </div>
-</div>
-    
-                </div>
-            </div>
-        </div>
     </div>
 
     <%- include("partials/footer.ejs") %>
-    

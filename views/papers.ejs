@@ -1,0 +1,37 @@
+<%- include("partials/header.ejs") %>
+<h1>Publication Page</h1>
+<% rPapers.forEach(function(i){ %>
+    <div>
+        <!-- <h4>
+            <%= i.category %>
+        </h4> -->
+        <h4>
+            <%= i.author %>
+        </h4>
+        <h4>
+            <%= i.title %>
+        </h4>
+        <h4>
+            <%= i.journal_name %>
+        </h4>
+        <h4>
+            <%= i.publication_title %>
+        </h4>
+        <h4>
+            <%= i.volume_number %>
+        </h4>
+        <h4>
+            <%= i.issue_number %>
+        </h4>
+        <h4>
+            <%= i.page_number %>
+        </h4>
+        <h4>
+            <%= i.issn_number %>
+        </h4>
+        <h4>
+            <%= i.pindexing %>
+        </h4>
+    </div>
+    <% }); %>
+        <%- include("partials/footer.ejs") %>
