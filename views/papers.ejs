@@ -1,37 +1,80 @@
-<%- include("partials/header.ejs") %>
-<h1>Publication Page</h1>
-<% rPapers.forEach(function(i){ %>
-    <div>
-        <!-- <h4>
-            <%= i.category %>
-        </h4> -->
-        <h4>
-            <%= i.author %>
-        </h4>
-        <h4>
-            <%= i.title %>
-        </h4>
-        <h4>
-            <%= i.journal_name %>
-        </h4>
-        <h4>
-            <%= i.publication_title %>
-        </h4>
-        <h4>
-            <%= i.volume_number %>
-        </h4>
-        <h4>
-            <%= i.issue_number %>
-        </h4>
-        <h4>
-            <%= i.page_number %>
-        </h4>
-        <h4>
-            <%= i.issn_number %>
-        </h4>
-        <h4>
-            <%= i.pindexing %>
-        </h4>
-    </div>
-    <% }); %>
-        <%- include("partials/footer.ejs") %>
+<%- include("partials/footer.ejs") %>
+
+    <%- include("partials/header.ejs") %>
+        <div class="container-fluid">
+            <div class="row">
+                <%- include("partials/navbar.ejs") %>
+                    <div class="col-md-8 left">
+                        <p class="heading-pg">Targets</p>
+
+
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Author</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Journal Name</th>
+                                        <th scope="col">Publication Title</th>
+                                        <th scope="col">Volume Number</th>
+                                        <th scope="col">Issue Number</th>
+                                        <th scope="col">Page Number</th>
+                                        <th scope="col">Issn Number</th>
+                                        <th scope="col">Indexing Number</th>
+
+
+                                    </tr>
+                                </thead>
+                                <% rPapers.forEach(function(i){ %>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row"></th>
+                                            <td>
+                                                <!-- Will Be ADded By UMang -->
+                                            </td>
+                                            <td>
+                                                <%= i.author %>
+                                            </td>
+                                            <td>
+                                                <%= i.title %>
+                                            </td>
+                                            <td>
+                                                <%= i.journal_name %>
+                                            </td>
+                                            <td>
+                                                <%= i.publication_title %>
+                                            </td>
+                                            <td>
+                                                <%= i.volume_number %>
+                                            </td>
+                                            <td>
+                                                <%= i.issue_number %>
+                                            </td>
+                                            <td>
+                                                <%= i.page_number %>
+                                            </td>
+                                            <td>
+                                                <%= i.issn_number %>
+                                            </td>
+                                            <td>
+                                                <%= i.pindexing %>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <% }); %>
+                            </table>
+
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-2">
+                        <%- include("partials/profile.ejs") %>
+                    </div>
+            </div>
+            <%- include("partials/footer.ejs") %>
