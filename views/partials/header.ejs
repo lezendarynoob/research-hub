@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    
     <div>
         <nav class="navbar navbar-expand navbar-dark navs">
             <div class="navbar-nav">
@@ -22,7 +23,12 @@
                     <a class="nav-item nav-link" href="#">Dashboard</a>
                 </div>
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="#">Logout <img src="/images/logout.png" alt=""></a>
+                    <% if(!currentUser){ %>
+                    <a class="nav-item nav-link" href="/register">Sign Up!</a>
+                    <a class="nav-item nav-link" href="/login">Login </a>
+                    <% }else{  %>
+                    <a class="nav-item nav-link" href="/logout">Logout <img src="/images/logout.png" alt=""></a>
+                    <%  } %>
                 </div>
             </div>
         </nav>
