@@ -2,96 +2,61 @@ var express = require('express'),
     app = express(),
     PORT = process.env.PORT || 3000,
     bodyParser = require('body-parser'),
-    ejs = require('ejs'),
-    expressLayout = require('express-ejs-layouts'),
-    path = require('path'),
-    mongoose = require('mongoose');
+    passport = require('passport'),
+    LocalStrategy=require("passport-local"),
+    mongoose = require('mongoose'),
+    publicationDetails=require('./models/publications'),
+    targetDetails=require('./models/setTarget'),
+    User=require('./models/user');
+
+mongoose.connect("mongodb://localhost/researchApp", {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+});
+
 
 app.use(bodyParser.urlencoded({
         extended: true
     }));
     
-
-mongoose.connect("mongodb://localhost/researchApp", {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-});
-
 //Setting View Engine
 // app.use(expressLayout)
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs')
 
-//SCHEMA 
-var publicationDetailsSchema = new mongoose.Schema({
-    Category:String,
-    author: String,
-    title: String,
-    journal_name: String,
-    publication_title: String,
-    volume_number: String,
-    issue_number: String,
-    page_number:String,
-    issn_number: String,
-    pindexing: String,
+//Passport Configuration
+app.use(require('express-session')({
+    secret: "Coding till infinity",
+    resave: false,
+    saveUninitialized:false
+}));
+app.use(passport.initialize());
 
-    
-});
+app.use(passport.session());
 
+passport.use(new LocalStrategy(User.authenticate()));
 
-var setTargetSchema=new mongoose.Schema({
-    category_set_trgt:String,
-    title_set_trgt: String,
-   indexing:String,
-    achievement_date_set_trgt:Date
+passport.serializeUser(User.serializeUser());
 
-});
+passport.deserializeUser(User.deserializeUser());
 
-//Making Schema Model
-
-var publicationDetails = mongoose.model("publicationDetails", publicationDetailsSchema);
-// publicationDetails.create( { 
-//     Category: "One",
-//     author: "K Ballamurgan",
-//     title: "abc",
-//     journal_name: "The Science",
-//     publication_title:"Cs",
-//     volume_number:"45C",
-//     issue_number:"12869FGFG",
-//     page_number:"67",
-//     issn_number: "yidia00",
-//     indexing: "general",
-
-
-
-// } , function(err,publication){
-//                         if(err){
-//                             console.log(err);
-//                         }else{
-//                             console.log("Newly added Publication");
-//                             console.log(publication);
-//                         }
-// });
-
-var targetDetails=mongoose.model("targetDetails",setTargetSchema);
-// targetDetails.create( { category_set_trgt : "One" ,
-//                         title_set_trgt : "Boom On React",
-//                         indexing_set_trgt : "general",
-//                         achievement_date_set_trgt: "2020-12-10"
-//                     } , function(err,target){
-//                         if(err){
-//                             console.log(err);
-//                         }else{
-//                             console.log("New target");
-//                             console.log(target);
-//                         }
-// });
-
-//Routes
-app.get('/', function(req, res) {
-    res.render('home')
+app.use(function(req,res,next) {
+    res.locals.currentUser = req.user;
+    next();
 })
 
+
+
+//Routes
+
+app.get('/', function(req, res) {
+    
+    res.render('home',{currentUser:req.user});
+})
+
+//PUBLICATION 
 app.get("/publication", function(req, res) {
 
 
@@ -106,7 +71,6 @@ app.get("/publication", function(req, res) {
         }
     })
 });
-
 app.post("/publication", function(req, res) {
     var Category=req.body.category;
     var author = req.body.author;
@@ -143,10 +107,12 @@ app.post("/publication", function(req, res) {
     })
 
 })
-
 app.get("/publication/new", function(req, res) {
     res.render("newPublication");
 })
+
+
+//SET TARGET
 app.get("/settarget", function(req, res) {
     targetDetails.find({}, function(err, target) {
         if (err) {
@@ -172,7 +138,7 @@ app.post("/settarget", function(req, res) {
         achievement_date_set_trgt:achievement_date_set_trgt
     }
 
-    console.log(newTarget);
+    
     targetDetails.create(newTarget, function(err, newlyCreatedPaper) {
         if (err) {
             console.log(err);
@@ -188,8 +154,6 @@ app.get("/settarget/new", function(req, res){
     res.render("newTarget");
 })
 
-
-
 app.get("/studpub", function(req, res) {
     res.render("student_publication");
 })
@@ -199,6 +163,50 @@ app.get("/fundprj", function(req, res) {
 app.get("/publication/:id", function(req, res) {
 
 })
+
+//AUTH Routes
+app.get("/register", function(req, res){
+    res.render("register");
+});
+app.post("/register",function(req, res){
+    req.body.username
+    req.body.password
+    User.register(new User({ username : req.body.username}),req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req,res,function(){
+            res.redirect("/settarget");
+        });
+
+    });
+});
+
+
+//LOGIN
+app.get("/login",function(req, res){
+    res.render("login");
+})
+app.post("/login", passport.authenticate("local",
+ { successRedirect : "/" , failureRedirect : "/login"} ) 
+ ,function(req,res){
+    
+});
+
+//LOGOUT 
+app.get("/logout",function(req,res){
+    req.logout();
+    
+    res.redirect("/");
+})
+
+function isLoggedIn(req,res,next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(PORT, function() {
     console.log("Research Paper Application has Started!")
