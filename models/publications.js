@@ -1,4 +1,5 @@
-var mongoose=require('mongoose');
+var mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 var publicationDetailsSchema = new mongoose.Schema({
     Category:String,
@@ -11,6 +12,7 @@ var publicationDetailsSchema = new mongoose.Schema({
     page_number:String,
     issn_number: String,
     pindexing: String,
+    createdBy: {type: ObjectId},
 
     
 });

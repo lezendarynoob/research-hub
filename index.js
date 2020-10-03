@@ -1,13 +1,13 @@
-var express = require('express'),
-    app = express(),
-    PORT = process.env.PORT || 3000,
-    bodyParser = require('body-parser'),
-    passport = require('passport'),
-    LocalStrategy=require("passport-local"),
-    mongoose = require('mongoose'),
-    publicationDetails=require('./models/publications'),
-    targetDetails=require('./models/setTarget'),
-    User=require('./models/user');
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy=require("passport-local");
+const mongoose = require('mongoose');
+const publicationDetails = require('./models/publications');
+const targetDetails = require('./models/setTarget');
+const User = require('./models/user');
 
 mongoose.connect("mongodb://localhost/researchApp", {
         useUnifiedTopology: true,
@@ -15,6 +15,7 @@ mongoose.connect("mongodb://localhost/researchApp", {
         useCreateIndex: true,
         useFindAndModify: false
 });
+  
 
 
 app.use(bodyParser.urlencoded({
@@ -61,7 +62,7 @@ app.get("/publication", function(req, res) {
 
 
 
-    publicationDetails.find({}, function(err, publication) {
+    publicationDetails.find({createdBy: req.user._id}, function(err, publication) {
         if (err) {
             console.log(err);
         } else {
@@ -94,7 +95,8 @@ app.post("/publication", function(req, res) {
         issue_number:issue_number,
         page_number:page_number,
         issn_number:issn_number,
-        pindexing:pindexing
+        pindexing:pindexing,
+        createdBy: req.user._id
        
     }
     publicationDetails.create(newPublication, function(err, newPublication) {
