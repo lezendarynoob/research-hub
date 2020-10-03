@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Home</title>
+    <!-- <title>Home</title> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/stylesheets/main.css" />
@@ -11,7 +11,7 @@
 
 <body>
     <div>
-        <nav class="navbar navbar-expand navbar-dark navs">
+        <nav class="navbar navbar-expand navbar-dark navs fixed-top ">
             <div class="navbar-nav d-block d-lg-none">
                 <a class="nav-item nav-link" onclick="openNav()">
                     <i class="fa fa-bars"></i>
@@ -19,10 +19,7 @@
             </div>
             <a class="navbar-brand" href="#"><img src="/images/logo.png" class="logo" alt="" /></a>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav m-auto">
-                    <a class="nav-item nav-link" href="#">Dashboard</a>
-                </div>
-                <div class="navbar-nav">
+                <div class="navbar-nav navbard-link">
                     <% if(!currentUser){ %>
                         <a class="nav-item nav-link" href="/register">Sign Up!</a>
                         <a class="nav-item nav-link" href="/">Login </a>
@@ -33,7 +30,7 @@
             </div>
         </nav>
 
-        <div id="mySidenav" class="sidenav">
+        <div id="mySidenav" class="responsive-sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a
         >
         <a href="#">Set Target</a>
@@ -54,6 +51,4 @@
             document.getElementById("mySidenav").style.width = "0";
         }
     </script>
-</body>
-
-</html>
+    <div style="padding-top: 75px;">
