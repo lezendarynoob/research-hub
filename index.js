@@ -54,11 +54,11 @@ app.use(function(req, res, next) {
 
 app.get('/', function(req, res) {
 
-    if(req.user){
+    if (req.user) {
         res.redirect('/login', {
-            currentUser: req.user.firstName
+            // currentUser: req.user.firstName
         });
-    }else{
+    } else {
         res.render('home');
     }
 })
@@ -66,10 +66,10 @@ app.get('/', function(req, res) {
 //PUBLICATION 
 app.get("/publication", async function(req, res) {
 
-    try{
+    try {
         let publications = []
 
-        for(let i = 0; i < req.user.publications.length; i++){
+        for (let i = 0; i < req.user.publications.length; i++) {
             let pub = await publicationDetails.findById(req.user.publications[i]);
             publications.push(pub);
         }
@@ -80,7 +80,7 @@ app.get("/publication", async function(req, res) {
         });
 
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
 });
@@ -119,12 +119,14 @@ app.post("/publication", function(req, res) {
             console.log(err);
         } else {
             //redirect back to the research papers Page
-            for(let i = 0; i < users.length; i++){
-                let user = await User.findOne({username: users[i].trim()}).exec();
-                if(user){
+            for (let i = 0; i < users.length; i++) {
+                let user = await User.findOne({
+                    username: users[i].trim()
+                }).exec();
+                if (user) {
                     user.publications.push(newPublication._id);
                     await user.save();
-                }else{
+                } else {
                     continue;
                 }
             }
@@ -207,7 +209,7 @@ app.get("/register", function(req, res) {
     res.render("register");
 });
 app.post("/register", function(req, res) {
-    
+
     let user = new User({
         username: req.body.username,
         firstName: req.body.firstName,
