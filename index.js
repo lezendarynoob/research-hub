@@ -117,6 +117,9 @@ app.get("/publication/new", function(req, res) {
     res.render("newPublication");
 })
 
+app.get("/profile", function(req, res) {
+    res.render("profile");
+})
 
 //SET TARGET
 app.get("/settarget", function(req, res) {
