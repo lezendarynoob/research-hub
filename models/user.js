@@ -1,6 +1,6 @@
 var mongoose=require("mongoose");
 var passportLocalMongoose=require("passport-local-mongoose");
-
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 var UserSchema = new mongoose.Schema({
     username : String,
@@ -8,7 +8,8 @@ var UserSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     School: String,
-    Grade: String
+    Grade: String,
+    publications: [ObjectId]
 
 });
 

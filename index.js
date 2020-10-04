@@ -54,28 +54,38 @@ app.use(function(req, res, next) {
 
 app.get('/', function(req, res) {
 
-    res.render('home', {
-        currentUser: req.user
-    });
+    if(req.user){
+        res.redirect('/login', {
+            currentUser: req.user.firstName
+        });
+    }else{
+        res.render('home');
+    }
 })
 
 //PUBLICATION 
-app.get("/publication", function(req, res) {
+app.get("/publication", async function(req, res) {
 
+    try{
+        let publications = []
 
-
-    publicationDetails.find({
-        createdBy: req.user._id
-    }, function(err, publication) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("papers", {
-                rPapers: publication
-            })
+        for(let i = 0; i < req.user.publications.length; i++){
+            let pub = await publicationDetails.findById(req.user.publications[i]);
+            publications.push(pub);
         }
-    })
+
+        res.render("papers", {
+            rPapers: publications,
+            currentUser: req.user.firstName
+        });
+
+
+    }catch(err){
+        console.log(err);
+    }
 });
+
+
 app.post("/publication", function(req, res) {
     var Category = req.body.category;
     var author = req.body.author;
@@ -88,6 +98,8 @@ app.post("/publication", function(req, res) {
     var issn_number = req.body.issn_number;
     var pindexing = req.body.pindexing;
 
+    let users = req.body.author.split(',');
+
 
     var newPublication = {
         Category: Category,
@@ -99,22 +111,32 @@ app.post("/publication", function(req, res) {
         issue_number: issue_number,
         page_number: page_number,
         issn_number: issn_number,
-        pindexing: pindexing,
-        createdBy: req.user._id
+        pindexing: pindexing
 
     }
-    publicationDetails.create(newPublication, function(err, newPublication) {
+    publicationDetails.create(newPublication, async function(err, newPublication) {
         if (err) {
             console.log(err);
         } else {
             //redirect back to the research papers Page
+            for(let i = 0; i < users.length; i++){
+                let user = await User.findOne({username: users[i].trim()}).exec();
+                if(user){
+                    user.publications.push(newPublication._id);
+                    await user.save();
+                }else{
+                    continue;
+                }
+            }
             res.redirect("/publication");
         }
     })
 
 })
 app.get("/publication/new", function(req, res) {
-    res.render("newPublication");
+    res.render("newPublication", {
+        currentUser: req.user.firstName
+    });
 })
 
 
@@ -125,7 +147,8 @@ app.get("/settarget", function(req, res) {
             console.log(err);
         } else {
             res.render("targetDetails", {
-                setTarget: target
+                setTarget: target,
+                currentUser: req.user.firstName
             })
         }
     })
@@ -157,14 +180,20 @@ app.post("/settarget", function(req, res) {
 })
 
 app.get("/settarget/new", function(req, res) {
-    res.render("newTarget");
+    res.render("newTarget", {
+        currentUser: req.user.firstName
+    });
 })
 
 app.get("/studpub", function(req, res) {
-    res.render("student_publication");
+    res.render("student_publication", {
+        currentUser: req.user.firstName
+    });
 })
 app.get("/fundprj", function(req, res) {
-    res.render("funded_project");
+    res.render("funded_project", {
+        currentUser: req.user.firstName
+    });
 })
 app.get("/publication/:id", function(req, res) {
 
@@ -175,11 +204,16 @@ app.get("/register", function(req, res) {
     res.render("register");
 });
 app.post("/register", function(req, res) {
-    req.body.username
-    req.body.password
-    User.register(new User({
-        username: req.body.username
-    }), req.body.password, function(err, user) {
+    
+    let user = new User({
+        username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        School: req.body.School,
+        Grade: req.body.Grade
+    });
+
+    User.register(user, req.body.password, function(err, user) {
         if (err) {
             console.log(err);
             return res.render("register");
@@ -194,7 +228,9 @@ app.post("/register", function(req, res) {
 
 //LOGIN
 app.get("/login", function(req, res) {
-    res.render("login");
+    res.render("login", {
+        currentUser: req.user.firstName
+    });
 })
 app.post("/login", passport.authenticate("local", {
     successRedirect: "/login",
@@ -210,12 +246,6 @@ app.get("/logout", function(req, res) {
     res.redirect("/");
 })
 
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
 
 app.listen(PORT, function() {
     console.log("Research Paper Application has Started!")
