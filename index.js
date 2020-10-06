@@ -152,6 +152,7 @@ app.post("/publication", function(req, res) {
 app.get("/publication/new", function(req, res) {
     res.render("newPublication", {
         currentUser: req.user.firstName,
+        username: req.user.username,
         lastName: req.user.lastName,
         School: req.user.School,
         WebOfScience: req.user.WebOfScience,
@@ -213,6 +214,7 @@ app.post("/settarget", function(req, res) {
 app.get("/settarget/new", function(req, res) {
     res.render("newTarget", {
         currentUser: req.user.firstName,
+        username: req.user.username,
         lastName: req.user.lastName,
         School: req.user.School,
         WebOfScience: req.user.WebOfScience,
@@ -225,6 +227,7 @@ app.get("/settarget/new", function(req, res) {
 app.get("/studpub", function(req, res) {
     res.render("student_publication", {
         currentUser: req.user.firstName,
+        username: req.user.username,
         lastName: req.user.lastName,
         School: req.user.School,
         WebOfScience: req.user.WebOfScience,
@@ -237,6 +240,7 @@ app.get("/studpub", function(req, res) {
 app.get("/fundprj", function(req, res) {
     res.render("funded_project", {
         currentUser: req.user.firstName,
+        username: req.user.username,
         lastName: req.user.lastName,
         School: req.user.School,
         WebOfScience: req.user.WebOfScience,
@@ -285,6 +289,7 @@ app.post("/register", function(req, res) {
 app.get("/login", function(req, res) {
     res.render("login", {
         currentUser: req.user.firstName,
+        username: req.user.username,
         lastName: req.user.lastName,
         School: req.user.School,
         WebOfScience: req.user.WebOfScience,
