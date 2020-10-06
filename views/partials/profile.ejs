@@ -63,7 +63,7 @@
     </div>
     <div>
         <p class="d-flex justify-content-center font-weight-bold" id="Name">
-            <%= currentUser %>
+          <%= currentUser %>  <%= lastName %>
         </p>
         <p class="d-flex justify-content-center font-weight-light" id="designation">Designation</p>
     </div>
@@ -77,7 +77,7 @@
         <div>
             <p><span class="genre">School</span></p>
             <p>
-                <span id="school_name">School of Computer Science and Engineering</span>
+                <span id="school_name"><%= School %></span>
             </p>
         </div>
         <hr />
@@ -88,22 +88,22 @@
         <hr />
         <div>
             <p><span class="genre">Web of Science</span></p>
-            <p><span id="w_o_s_id">122343253532123</span></p>
+            <p><span id="w_o_s_id"><%= WebOfScience %></span></p>
         </div>
         <hr />
         <div>
             <p><span class="genre">Scorpus ID</span></p>
-            <p><span id="sc_id">122343253532123</span></p>
+            <p><span id="sc_id"><%= ScorpusId  %></span></p>
         </div>
         <hr />
         <div>
             <p><span class="genre">Google Scholar ID</span></p>
-            <p><span id="g_sc_id">122343253532123</span></p>
+            <p><span id="g_sc_id"><%= GoogleScholarId %></span></p>
         </div>
         <hr />
         <div>
             <p><span class="genre">Orchid ID</span></p>
-            <p><span id="or_id">122343253532123</span></p>
+            <p><span id="or_id"><%= OrchidId %></span></p>
         </div>
     </div>
 </div>
