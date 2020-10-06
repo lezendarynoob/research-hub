@@ -56,13 +56,13 @@ app.get('/', function(req, res) {
 
     if (req.user) {
         res.redirect('/login', {
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School : req.user.School,
-            WebOfScience : req.body.WebOfScience,
-            ScorpusId : req.body.ScorpusId,
-            GoogleScholarId: req.body.GoogleScholarId,
-            OrchidId: req.body.OrchidId
+            // currentUser: req.user.firstName,
+            // lastName: req.user.lastName,
+            // School : req.user.School,
+            // WebOfScience : req.user.WebOfScience,
+            // ScorpusId : req.user.ScorpusId,
+            // GoogleScholarId: req.user.GoogleScholarId,
+            // OrchidId: req.user.OrchidId
 
 
         });
@@ -86,11 +86,11 @@ app.get("/publication", async function(req, res) {
             rPapers: publications,
             currentUser: req.user.firstName,
             lastName: req.user.lastName,
-            School : req.user.School,
-            WebOfScience : req.body.WebOfScience,
-            ScorpusId : req.body.ScorpusId,
-            GoogleScholarId: req.body.GoogleScholarId,
-            OrchidId: req.body.OrchidId
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
         });
 
 
@@ -153,11 +153,11 @@ app.get("/publication/new", function(req, res) {
     res.render("newPublication", {
         currentUser: req.user.firstName,
         lastName: req.user.lastName,
-        School : req.user.School,
-        WebOfScience : req.body.WebOfScience,
-        ScorpusId : req.body.ScorpusId,
-        GoogleScholarId: req.body.GoogleScholarId,
-        OrchidId: req.body.OrchidId
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 
@@ -175,11 +175,11 @@ app.get("/settarget", function(req, res) {
                 setTarget: target,
                 currentUser: req.user.firstName,
                 lastName: req.user.lastName,
-                School : req.user.School,
-                WebOfScience : req.body.WebOfScience,
-                ScorpusId : req.body.ScorpusId,
-                GoogleScholarId: req.body.GoogleScholarId,
-                OrchidId: req.body.OrchidId
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
             })
         }
     })
@@ -214,35 +214,35 @@ app.get("/settarget/new", function(req, res) {
     res.render("newTarget", {
         currentUser: req.user.firstName,
         lastName: req.user.lastName,
-        School : req.user.School,
-        WebOfScience : req.body.WebOfScience,
-        ScorpusId : req.body.ScorpusId,
-        GoogleScholarId: req.body.GoogleScholarId,
-        OrchidId: req.body.OrchidId
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 
 app.get("/studpub", function(req, res) {
     res.render("student_publication", {
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School : req.user.School,
-            WebOfScience : req.body.WebOfScience,
-            ScorpusId : req.body.ScorpusId,
-            GoogleScholarId: req.body.GoogleScholarId,
-            OrchidId: req.body.OrchidId
+        currentUser: req.user.firstName,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
 
     });
 })
 app.get("/fundprj", function(req, res) {
     res.render("funded_project", {
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School : req.user.School,
-            WebOfScience : req.body.WebOfScience,
-            ScorpusId : req.body.ScorpusId,
-            GoogleScholarId: req.body.GoogleScholarId,
-            OrchidId: req.body.OrchidId
+        currentUser: req.user.firstName,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 app.get("/publication/:id", function(req, res) {
@@ -261,11 +261,11 @@ app.post("/register", function(req, res) {
         lastName: req.body.lastName,
         School: req.body.School,
         Grade: req.body.Grade,
-        WebOfScience : req.body.WebOfScience,
-        ScorpusId : req.body.ScorpusId,
+        WebOfScience: req.body.WebOfScience,
+        ScorpusId: req.body.ScorpusId,
         GoogleScholarId: req.body.GoogleScholarId,
         OrchidId: req.body.OrchidId,
-      
+
     });
 
     User.register(user, req.body.password, function(err, user) {
@@ -285,12 +285,12 @@ app.post("/register", function(req, res) {
 app.get("/login", function(req, res) {
     res.render("login", {
         currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School : req.user.School,
-            WebOfScience : req.body.WebOfScience,
-            ScorpusId : req.body.ScorpusId,
-            GoogleScholarId: req.body.GoogleScholarId,
-            OrchidId: req.body.OrchidId
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 app.post("/login", passport.authenticate("local", {
