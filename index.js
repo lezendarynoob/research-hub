@@ -56,7 +56,15 @@ app.get('/', function(req, res) {
 
     if (req.user) {
         res.redirect('/login', {
-            // currentUser: req.user.firstName
+            // currentUser: req.user.firstName,
+            // lastName: req.user.lastName,
+            // School : req.user.School,
+            // WebOfScience : req.user.WebOfScience,
+            // ScorpusId : req.user.ScorpusId,
+            // GoogleScholarId: req.user.GoogleScholarId,
+            // OrchidId: req.user.OrchidId
+
+
         });
     } else {
         res.render('home');
@@ -76,7 +84,13 @@ app.get("/publication", async function(req, res) {
 
         res.render("papers", {
             rPapers: publications,
-            currentUser: req.user.firstName
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
         });
 
 
@@ -137,7 +151,14 @@ app.post("/publication", function(req, res) {
 })
 app.get("/publication/new", function(req, res) {
     res.render("newPublication", {
-        currentUser: req.user.firstName
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 
@@ -145,7 +166,7 @@ app.get("/profile", function(req, res) {
     res.render("profile");
 })
 
-//SET TARGET
+//SET TARGETcurrentUser: req.user.firstName
 app.get("/settarget", function(req, res) {
     targetDetails.find({}, function(err, target) {
         if (err) {
@@ -153,7 +174,13 @@ app.get("/settarget", function(req, res) {
         } else {
             res.render("targetDetails", {
                 setTarget: target,
-                currentUser: req.user.firstName
+                currentUser: req.user.firstName,
+                lastName: req.user.lastName,
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
             })
         }
     })
@@ -186,18 +213,40 @@ app.post("/settarget", function(req, res) {
 
 app.get("/settarget/new", function(req, res) {
     res.render("newTarget", {
-        currentUser: req.user.firstName
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 
 app.get("/studpub", function(req, res) {
     res.render("student_publication", {
-        currentUser: req.user.firstName
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+
     });
 })
 app.get("/fundprj", function(req, res) {
     res.render("funded_project", {
-        currentUser: req.user.firstName
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 app.get("/publication/:id", function(req, res) {
@@ -215,7 +264,12 @@ app.post("/register", function(req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         School: req.body.School,
-        Grade: req.body.Grade
+        Grade: req.body.Grade,
+        WebOfScience: req.body.WebOfScience,
+        ScorpusId: req.body.ScorpusId,
+        GoogleScholarId: req.body.GoogleScholarId,
+        OrchidId: req.body.OrchidId,
+
     });
 
     User.register(user, req.body.password, function(err, user) {
@@ -234,7 +288,14 @@ app.post("/register", function(req, res) {
 //LOGIN
 app.get("/login", function(req, res) {
     res.render("login", {
-        currentUser: req.user.firstName
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
     });
 })
 app.post("/login", passport.authenticate("local", {

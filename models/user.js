@@ -9,6 +9,10 @@ var UserSchema = new mongoose.Schema({
     lastName: String,
     School: String,
     Grade: String,
+    WebOfScience: String,
+    ScorpusId: String,
+    GoogleScholarId: String,
+    OrchidId: String,
     publications: [ObjectId]
 
 });
