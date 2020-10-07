@@ -165,7 +165,22 @@ app.get("/publication/new", function(req, res) {
 
 app.get("/profile", function(req, res) {
     res.render("profile");
+
 })
+app.get("/profile/edit", function(req, res) {
+    res.render("edit_profile", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+})
+
 
 //SET TARGETcurrentUser: req.user.firstName
 app.get("/settarget", function(req, res) {
@@ -273,6 +288,7 @@ app.post("/register", function(req, res) {
         ScorpusId: req.body.ScorpusId,
         GoogleScholarId: req.body.GoogleScholarId,
         OrchidId: req.body.OrchidId,
+        emailId: req.body.email
 
     });
 

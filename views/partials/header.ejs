@@ -3,50 +3,50 @@
 
 <head>
     <!-- <title>Home</title> -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/stylesheets/main.css" />
 </head>
 
 
 <body>
-    <div class="container-fluid">
-        <div>
-            <nav class="navbar navbar-expand navbar-dark navs fixed-top">
-                <div class="navbar-nav d-block d-lg-none">
-                    <a class="nav-item nav-link" onclick="openNav()">
-                        <i class="fa fa-bars"></i>
-                    </a>
-                </div>
-                <a class="navbar-brand" href="/login"><img src="/images/logo.png" class="logo" alt="" /></a>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav navbard-link">
-                        <% if(!currentUser){ %>
+    <div>
+        <nav class="navbar navbar-expand navbar-dark navs fixed-top">
+            <div class="navbar-nav d-block d-lg-none">
+                <a class="nav-item nav-link" onclick="openNav()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+            <a class="navbar-brand" href="/login"><img src="/images/logo.png" class="logo" alt="" /></a>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav navbard-link">
+                    <% if(!currentUser){ %>
                         <a class="nav-item nav-link" href="/register">Sign Up!</a>
                         <a class="nav-item nav-link" href="/">Login </a>
                         <% }else{ %>
-                        <a class="nav-item nav-link" href="/logout">Logout <img src="/images/logout.png" alt="" /></a>
-                        <% } %>
-                    </div>
-                    <div class="navbar-nav d-block d-lg-none ml-auto">
-                        <a class="nav-item nav-link" href="/profile">
-                            <i class="fa fa-user"></i>
-                        </a>
-                    </div>
+                            <a class="nav-item nav-link" href="/logout">Logout <img src="/images/logout.png" alt="" /></a>
+                            <% } %>
                 </div>
-            </nav>
-
-            <div id="mySidenav" class="responsive-sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="/settarget/new">Set Target</a>
-                <a href="/publication/new">Create Publication</a>
-                <a href="/studpub">Create Student Publication</a>
-                <a href="/publication">View Publication</a>
-                <a href="/fundprj">Funded Project</a>
-                <a href="#">View Student Publication</a>
+                <div class="navbar-nav d-block d-lg-none ml-auto">
+                    <a class="nav-item nav-link" href="/profile">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </div>
             </div>
+        </nav>
+
+        <div id="mySidenav" class="responsive-sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="/settarget/new">Set Target</a>
+            <a href="/publication/new">Create Publication</a>
+            <a href="/studpub">Create Student Publication</a>
+            <a href="/publication">View Publication</a>
+            <a href="/fundprj">Funded Project</a>
+            <a href="#">View Student Publication</a>
         </div>
+    </div>
+    <div class="container-fluid nav-padding">
+
         <div class="pb-5"></div>
         <script type="text/javascript">
             function openNav() {
@@ -57,6 +57,7 @@
             function closeNav() {
                 document.getElementById("mySidenav").style.width = "0";
             }
+
             function openProfile() {
                 document.getElementById("profileNav").style.width = "250px";
             }

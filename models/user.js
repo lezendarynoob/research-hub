@@ -13,6 +13,7 @@ var UserSchema = new mongoose.Schema({
     ScorpusId: String,
     GoogleScholarId: String,
     OrchidId: String,
+    emailId: String,
     publications: [ObjectId]
 
 });
