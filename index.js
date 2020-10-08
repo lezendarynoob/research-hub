@@ -298,7 +298,7 @@ app.post("/register", function(req, res) {
             return res.render("register");
         }
         passport.authenticate("local")(req, res, function() {
-            res.redirect("/settarget");
+            res.redirect("/login");
         });
 
     });
