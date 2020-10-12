@@ -10,6 +10,7 @@ const publicationDetails = require('./models/publications');
 const targetDetails = require('./models/setTarget');
 const User = require('./models/user');
 const studentPublicationDetails = require('./models/studentPub')
+const fundedProject = require('./models/fundedProject.js')
 
 mongoose.connect("mongodb://localhost/researchApp", {
     useUnifiedTopology: true,
@@ -50,7 +51,7 @@ app.use(function(req, res, next) {
     next();
 })
 
-
+var currentDateTime = new Date();
 
 //Routes
 
@@ -126,7 +127,7 @@ app.post("/publication", function(req, res) {
     let sampleFile = req.files.pubfile;
 
     // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv('./Pubication Uploads/' + publication_title + issn_number, function(err) {
+    sampleFile.mv('./Pubication Uploads/' + publication_title + issn_number + currentDateTime, function(err) {
         if (err)
             return res.status(500).send(err);
 
@@ -314,7 +315,7 @@ app.post("/studpub", function(req, res) {
     let sampleFile = req.files.stupubfile;
 
     // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv('./Student Publication Uploads/' + enrollmentNumber + pubTitle, function(err) {
+    sampleFile.mv('./Student Publication Uploads/' + enrollmentNumber + pubTitle + currentDateTime, function(err) {
         if (err)
             return res.status(500).send(err);
 
@@ -373,7 +374,94 @@ app.get("/studpub/new", function(req, res) {
 
 // STUDENT PUBLICATION ENDS
 
-app.get("/fundprj", function(req, res) {
+// Funded Project Starts
+app.get("/fundprj", async function(req, res) {
+    try {
+        let fundProject = []
+
+        for (let i = 0; i < req.user.fundProjects.length; i++) {
+            let fpro = await fundedProject.findById(req.user.fundProjects[i]);
+            fundProject.push(fpro);
+        }
+
+        res.render("funded_project_view", {
+            fDetails: fundProject,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+
+
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post("/fundprj", function(req, res) {
+    var namePrincipalInvestigator = req.body.principal_investigator;
+    var nameCoInvestigator = req.body.co_investigator;
+    var title = req.body.title_fund_prj;
+    var fundingAgency = req.body.funding_agency;
+    var overallCost = req.body.Overall_cost;
+    var startDate = req.body.start_date;
+    var EndDate = req.body.end_date;
+
+
+
+    let users = req.body.principal_investigator.split(',');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.fundfile;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv('./Funded Project Uploads/' + users + nameCoInvestigator + title + currentDateTime, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+
+
+    var newfundedproject = {
+        namePrincipalInvestigator: namePrincipalInvestigator,
+        nameCoInvestigator: nameCoInvestigator,
+        title: title,
+        fundingAgency: fundingAgency,
+        overallCost: overallCost,
+        startDate: startDate,
+        EndDate: EndDate
+
+    }
+    fundedProject.create(newfundedproject, async function(err, newfundedproject) {
+        if (err) {
+            console.log(err);
+        } else {
+            //redirect back to the research papers Page
+            for (let i = 0; i < users.length; i++) {
+                let user = await User.findOne({
+                    username: users[i].trim()
+                }).exec();
+                if (user) {
+                    user.fundProjects.push(newfundedproject._id);
+                    await user.save();
+                } else {
+                    continue;
+                }
+            }
+            res.redirect("/fundprj");
+        }
+    })
+
+})
+app.get("/fundprj/new", function(req, res) {
     res.render("funded_project", {
         currentUser: req.user.firstName,
         username: req.user.username,
@@ -386,6 +474,8 @@ app.get("/fundprj", function(req, res) {
         OrchidId: req.user.OrchidId
     });
 })
+
+// Funded Project Ends
 app.get("/publication/:id", function(req, res) {
 
 })

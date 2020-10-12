@@ -15,7 +15,8 @@ var UserSchema = new mongoose.Schema({
     OrchidId: String,
     emailId: String,
     studPublications: [ObjectId],
-    publications: [ObjectId]
+    publications: [ObjectId],
+    fundProjects: [ObjectId]
 
 });
 
