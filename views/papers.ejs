@@ -5,10 +5,10 @@
                 <p class="heading-pg">Targets</p>
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped">
+                    <table class="table table-hover css-serial table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th>#</th>
                                 <th scope="col">Category</th>
                                 <th scope="col">Author</th>
                                 <th scope="col">Title</th>
@@ -24,9 +24,10 @@
                         <% rPapers.forEach(function(i){ %>
                             <tbody>
                                 <tr>
-                                    <th scope="row"></th>
+                                    <td></td>
+
                                     <td>
-                                        <!-- Will Be ADded By UMang -->
+                                        <%= i.Category %>
                                     </td>
                                     <td>
                                         <%= i.author %>

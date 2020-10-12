@@ -5,28 +5,29 @@
                 <p class="heading-pg">Targets</p>
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped">
+                    <table class="table table-hover css-serial table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th>#</th>
+                                <th scope="col">Student Name</th>
+                                <th scope="col">Enrollment Number</th>
+                                <th scope="col">Semester</th>
+                                <th scope="col">Program</th>
                                 <th scope="col">Category</th>
-                                <th scope="col">Author</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Journal Name</th>
+                                <th scope="col">Author Name</th>
                                 <th scope="col">Publication Title</th>
+                                <th scope="col">Journal Name</th>
                                 <th scope="col">Volume Number</th>
                                 <th scope="col">Issue Number</th>
                                 <th scope="col">Page Number</th>
-                                <th scope="col">Issn Number</th>
-                                <th scope="col">Indexing Number</th>
-                                <th scope="col">Indexing Number</th>
-                                <th scope="col">Indexing Number</th>
+                                <th scope="col">ISSN Number</th>
+                                <th scope="col">Indexing</th>
                             </tr>
                         </thead>
                         <% sPapers.forEach(function(i){ %>
                             <tbody>
                                 <tr>
-                                    <th scope="row"></th>
+                                    <td></td>
 
                                     <td>
                                         <%= i.studentName %>
@@ -76,5 +77,3 @@
 
     </div>
     <%- include("partials/footer.ejs") %>
-
-        studentName: String, enrollmentNum: String, semester: String, program: String, category: String, authorName: String, publicationTitle: String, journalName: String, volumeNum: String, issueNum: String, pageNum: String, issnNum: String, indexing: String
