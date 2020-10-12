@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require("passport-local");
 const mongoose = require('mongoose');
+const fileUpload = require('express-fileupload');
 const publicationDetails = require('./models/publications');
 const targetDetails = require('./models/setTarget');
 const User = require('./models/user');
@@ -21,7 +22,7 @@ mongoose.connect("mongodb://localhost/researchApp", {
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(fileUpload());
 //Setting View Engine
 // app.use(expressLayout)
 app.use(express.static(__dirname + '/public'));
@@ -113,6 +114,21 @@ app.post("/publication", function(req, res) {
     var pindexing = req.body.pindexing;
 
     let users = req.body.author.split(',');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.pubfile;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv('./Pubication Uploads/' + publication_title + issn_number, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
 
 
     var newPublication = {
