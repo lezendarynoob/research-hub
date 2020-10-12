@@ -60,17 +60,7 @@ var currentDateTime = new Date();
 app.get('/', function(req, res) {
 
     if (req.user) {
-        res.redirect('/login', {
-            // currentUser: req.user.firstName,
-            // lastName: req.user.lastName,
-            // School : req.user.School,
-            // WebOfScience : req.user.WebOfScience,
-            // ScorpusId : req.user.ScorpusId,
-            // GoogleScholarId: req.user.GoogleScholarId,
-            // OrchidId: req.user.OrchidId
-
-
-        });
+        res.redirect(301, '/login')
     } else {
         res.render('home');
     }
