@@ -32,12 +32,12 @@
         <hr />
         <div>
             <p><span class="genre">Web of Science</span></p>
-            <p><span id="w_o_s_id"><%= WebOfScience %></span></p>
+            <p><span id="w_o_s_id"><a href="https://publons.com/researcher/<%= WebOfScience %>"><%= WebOfScience %></a> </span></p>
         </div>
         <hr />
         <div>
             <p><span class="genre">Scorpus ID</span></p>
-            <p><span id="sc_id"><%= ScorpusId  %></span></p>
+            <p><span id="sc_id"><a href="https://www.scopus.com/authid/detail.uri?authorId=<%= ScorpusId  %>"><%= ScorpusId  %></a></span></p>
         </div>
         <hr />
         <div>
@@ -47,7 +47,9 @@
         <hr />
         <div>
             <p><span class="genre">Orchid ID</span></p>
-            <p><span id="or_id"><%= OrchidId %></span></p>
+            <p><span id="or_id">
+                <a href="https://orcid.org/<%= OrchidId %>"><%= OrchidId %></a>
+                </span></p>
         </div>
     </div>
 </div>
