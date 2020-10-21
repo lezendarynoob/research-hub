@@ -21,6 +21,8 @@ mongoose.connect("mongodb://localhost/researchApp", {
 
 
 
+
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -28,6 +30,7 @@ app.use(fileUpload());
 //Setting View Engine
 // app.use(expressLayout)
 app.use(express.static(__dirname + '/public'));
+app.use('/file', express.static(__dirname + '/public/uploads'));
 app.set('view engine', 'ejs')
 
 //Passport Configuration
@@ -117,11 +120,12 @@ app.post("/publication", function(req, res) {
     let sampleFile = req.files.pubfile;
 
     // Use the mv() method to place the file somewhere on your server
-    sampleFile.mv('./Pubication Uploads/' + publication_title + issn_number + currentDateTime, function(err) {
+    let path =  issn_number + Date.now() + sampleFile.name;
+    sampleFile.mv(__dirname + '/public/uploads/' + path, function(err) {
         if (err)
             return res.status(500).send(err);
 
-        res.send('File uploaded!');
+        console.log(path);
     });
 
 
@@ -135,7 +139,8 @@ app.post("/publication", function(req, res) {
         issue_number: issue_number,
         page_number: page_number,
         issn_number: issn_number,
-        pindexing: pindexing
+        pindexing: pindexing,
+        fileURI: path
 
     }
     publicationDetails.create(newPublication, async function(err, newPublication) {
@@ -192,7 +197,15 @@ app.get("/profile/edit", function(req, res) {
         GoogleScholarId: req.user.GoogleScholarId,
         OrchidId: req.user.OrchidId
     });
-})
+});
+
+app.post('/profile/edit', async function(req, res){
+    let user = User.findById(req.user._id);
+    user.ScorpusId = req.body.ScorpusId;
+    //similarly change other fields here
+    await user.save();
+    res.redirect('/profile');
+});
 
 
 //SET TARGETcurrentUser: req.user.firstName
