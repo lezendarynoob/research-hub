@@ -42,7 +42,7 @@
     transition: 0.3s;
     color: grey;
     padding-top: 30px;
-    font-size: 20px;
+    font-size: 3vh;
 }
 
 
@@ -58,21 +58,22 @@
 .side-nav {
     /* height: 100%; */
     /* Full-height: remove this if you want "auto" height */
-    position: fixed;
+    position: sticky;
     /* Fixed Sidebar (stay in place on scroll) */
     z-index: 0;
     /* Stay on top */
     top: 0;
+    left: 0;
     /* Black */
     overflow-x: hidden;
     /* Disable horizontal scroll */
-    padding-top: 50px;
+    /* padding-top: 50px; */
 }
 
 .side-nav a {
-    color: grey;
-    padding-top: 30px;
-    font-size: 20px;
+    color: #FD6775;
+    padding-top: 20px;
+    font-size: 2.5vh;
 }
 
 .side-nav :hover {
@@ -120,6 +121,10 @@
     font-size: x-large;
 }
 
+.fa-user {
+    font-size: x-large;
+}
+
 .left {
     background-color: #F5F5FB;
 }
@@ -152,4 +157,24 @@
     color: #707070;
     font-weight: bold;
     padding-top: 20px;
+}
+
+.footer {
+    background-color: #991d1f;
+}
+
+.nav-padding {
+    padding-top: 20px;
+}
+
+.css-serial {
+    counter-reset: serial-number;
+    /* Set the serial number counter to 0 */
+}
+
+.css-serial td:first-child:before {
+    counter-increment: serial-number;
+    /* Increment the serial number counter */
+    content: counter(serial-number);
+    /* Display the counter */
 }

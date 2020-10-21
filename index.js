@@ -5,9 +5,12 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require("passport-local");
 const mongoose = require('mongoose');
+const fileUpload = require('express-fileupload');
 const publicationDetails = require('./models/publications');
 const targetDetails = require('./models/setTarget');
 const User = require('./models/user');
+const studentPublicationDetails = require('./models/studentPub')
+const fundedProject = require('./models/fundedProject.js')
 
 mongoose.connect("mongodb://localhost/researchApp", {
     useUnifiedTopology: true,
@@ -21,7 +24,7 @@ mongoose.connect("mongodb://localhost/researchApp", {
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(fileUpload());
 //Setting View Engine
 // app.use(expressLayout)
 app.use(express.static(__dirname + '/public'));
@@ -48,34 +51,50 @@ app.use(function(req, res, next) {
     next();
 })
 
-
+var currentDateTime = new Date();
 
 //Routes
 
+
+// Login Page
 app.get('/', function(req, res) {
 
-    res.render('home', {
-        currentUser: req.user
-    });
+    if (req.user) {
+        res.redirect(301, '/login')
+    } else {
+        res.render('home');
+    }
 })
 
 //PUBLICATION 
-app.get("/publication", function(req, res) {
+app.get("/publication", async function(req, res) {
 
+    try {
+        let publications = []
 
-
-    publicationDetails.find({
-        createdBy: req.user._id
-    }, function(err, publication) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("papers", {
-                rPapers: publication
-            })
+        for (let i = 0; i < req.user.publications.length; i++) {
+            let pub = await publicationDetails.findById(req.user.publications[i]);
+            publications.push(pub);
         }
-    })
+
+        res.render("papers", {
+            rPapers: publications,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+
+
+    } catch (err) {
+        console.log(err);
+    }
 });
+
+
 app.post("/publication", function(req, res) {
     var Category = req.body.category;
     var author = req.body.author;
@@ -88,6 +107,23 @@ app.post("/publication", function(req, res) {
     var issn_number = req.body.issn_number;
     var pindexing = req.body.pindexing;
 
+    let users = req.body.author.split(',');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.pubfile;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv('./Pubication Uploads/' + publication_title + issn_number + currentDateTime, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+
 
     var newPublication = {
         Category: Category,
@@ -99,33 +135,81 @@ app.post("/publication", function(req, res) {
         issue_number: issue_number,
         page_number: page_number,
         issn_number: issn_number,
-        pindexing: pindexing,
-        createdBy: req.user._id
+        pindexing: pindexing
 
     }
-    publicationDetails.create(newPublication, function(err, newPublication) {
+    publicationDetails.create(newPublication, async function(err, newPublication) {
         if (err) {
             console.log(err);
         } else {
             //redirect back to the research papers Page
+            for (let i = 0; i < users.length; i++) {
+                let user = await User.findOne({
+                    username: users[i].trim()
+                }).exec();
+                if (user) {
+                    user.publications.push(newPublication._id);
+                    await user.save();
+                } else {
+                    continue;
+                }
+            }
             res.redirect("/publication");
         }
     })
 
 })
 app.get("/publication/new", function(req, res) {
-    res.render("newPublication");
+    res.render("newPublication", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+})
+
+// Publication Ends
+
+// Profile
+app.get("/profile", function(req, res) {
+    res.render("profile");
+
+})
+app.get("/profile/edit", function(req, res) {
+    res.render("edit_profile", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
 })
 
 
-//SET TARGET
+//SET TARGETcurrentUser: req.user.firstName
 app.get("/settarget", function(req, res) {
     targetDetails.find({}, function(err, target) {
         if (err) {
             console.log(err);
         } else {
             res.render("targetDetails", {
-                setTarget: target
+                setTarget: target,
+                currentUser: req.user.firstName,
+                lastName: req.user.lastName,
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
             })
         }
     })
@@ -149,23 +233,239 @@ app.post("/settarget", function(req, res) {
         if (err) {
             console.log(err);
         } else {
-            //redirect back to the research papers Page
-            // res.redirect("/research");
             res.redirect("/settarget");
         }
     })
 })
 
 app.get("/settarget/new", function(req, res) {
-    res.render("newTarget");
+        res.render("newTarget", {
+            currentUser: req.user.firstName,
+            username: req.user.username,
+            grade: req.user.Grade,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+    })
+    // Set Target End
+
+// Student Publication Start
+
+app.get("/studpub", async function(req, res) {
+    try {
+        let studPublications = []
+
+        for (let i = 0; i < req.user.studPublications.length; i++) {
+            let spub = await studentPublicationDetails.findById(req.user.studPublications[i]);
+            studPublications.push(spub);
+        }
+
+        res.render("student_view", {
+            sPapers: studPublications,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+
+
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post("/studpub", function(req, res) {
+    var studentName = req.body.student_name;
+    var enrollmentNumber = req.body.enrollment_number;
+    var semester = req.body.semester;
+    var program = req.body.program_studpub;
+    var category = req.body.category_studpub;
+    var pubTitle = req.body.title_studpub;
+    var journalName = req.body.journal_name_studpub;
+    var issueNum = req.body.issue_number_studpub;
+    var pageNumber = req.body.page_number_studpub;
+    var issnNumber = req.body.issn_number_studpub;
+    var indexing = req.body.indexing_studpub;
+
+
+    let users = req.body.author_studpub.split(',');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.stupubfile;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv('./Student Publication Uploads/' + enrollmentNumber + pubTitle + currentDateTime, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+
+
+    var newStuPublication = {
+        studentName: studentName,
+        enrollmentNumber: enrollmentNumber,
+        semester: semester,
+        program: program,
+        category: category,
+        pubTitle: pubTitle,
+        journalName: journalName,
+        issueNum: issueNum,
+        pageNumber: pageNumber,
+        issnNumber: issnNumber,
+        indexing: indexing
+    }
+    studentPublicationDetails.create(newStuPublication, async function(err, newStuPublication) {
+        if (err) {
+            console.log(err);
+        } else {
+            //redirect back to the research papers Page
+            for (let i = 0; i < users.length; i++) {
+                let user = await User.findOne({
+                    username: users[i].trim()
+                }).exec();
+                if (user) {
+                    user.studPublications.push(newStuPublication._id);
+                    await user.save();
+                } else {
+                    continue;
+                }
+            }
+            res.redirect("/studpub");
+        }
+    })
+
+})
+app.get("/studpub/new", function(req, res) {
+    res.render("student_publication", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
 })
 
-app.get("/studpub", function(req, res) {
-    res.render("student_publication");
+
+// STUDENT PUBLICATION ENDS
+
+// Funded Project Starts
+app.get("/fundprj", async function(req, res) {
+    try {
+        let fundProject = []
+
+        for (let i = 0; i < req.user.fundProjects.length; i++) {
+            let fpro = await fundedProject.findById(req.user.fundProjects[i]);
+            fundProject.push(fpro);
+        }
+
+        res.render("funded_project_view", {
+            fDetails: fundProject,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+
+
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.post("/fundprj", function(req, res) {
+    var namePrincipalInvestigator = req.body.principal_investigator;
+    var nameCoInvestigator = req.body.co_investigator;
+    var title = req.body.title_fund_prj;
+    var fundingAgency = req.body.funding_agency;
+    var overallCost = req.body.Overall_cost;
+    var startDate = req.body.start_date;
+    var EndDate = req.body.end_date;
+
+
+
+    let users = req.body.principal_investigator.split(',');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    let sampleFile = req.files.fundfile;
+
+    // Use the mv() method to place the file somewhere on your server
+    sampleFile.mv('./Funded Project Uploads/' + users + nameCoInvestigator + title + currentDateTime, function(err) {
+        if (err)
+            return res.status(500).send(err);
+
+        res.send('File uploaded!');
+    });
+
+
+    var newfundedproject = {
+        namePrincipalInvestigator: namePrincipalInvestigator,
+        nameCoInvestigator: nameCoInvestigator,
+        title: title,
+        fundingAgency: fundingAgency,
+        overallCost: overallCost,
+        startDate: startDate,
+        EndDate: EndDate
+
+    }
+    fundedProject.create(newfundedproject, async function(err, newfundedproject) {
+        if (err) {
+            console.log(err);
+        } else {
+            //redirect back to the research papers Page
+            for (let i = 0; i < users.length; i++) {
+                let user = await User.findOne({
+                    username: users[i].trim()
+                }).exec();
+                if (user) {
+                    user.fundProjects.push(newfundedproject._id);
+                    await user.save();
+                } else {
+                    continue;
+                }
+            }
+            res.redirect("/fundprj");
+        }
+    })
+
 })
-app.get("/fundprj", function(req, res) {
-    res.render("funded_project");
+app.get("/fundprj/new", function(req, res) {
+    res.render("funded_project", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
 })
+
+// Funded Project Ends
 app.get("/publication/:id", function(req, res) {
 
 })
@@ -175,17 +475,28 @@ app.get("/register", function(req, res) {
     res.render("register");
 });
 app.post("/register", function(req, res) {
-    req.body.username
-    req.body.password
-    User.register(new User({
-        username: req.body.username
-    }), req.body.password, function(err, user) {
+
+    let user = new User({
+        username: req.body.username,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        School: req.body.School,
+        Grade: req.body.Grade,
+        WebOfScience: req.body.WebOfScience,
+        ScorpusId: req.body.ScorpusId,
+        GoogleScholarId: req.body.GoogleScholarId,
+        OrchidId: req.body.OrchidId,
+        emailId: req.body.email
+
+    });
+
+    User.register(user, req.body.password, function(err, user) {
         if (err) {
             console.log(err);
             return res.render("register");
         }
         passport.authenticate("local")(req, res, function() {
-            res.redirect("/settarget");
+            res.redirect("/login");
         });
 
     });
@@ -194,7 +505,17 @@ app.post("/register", function(req, res) {
 
 //LOGIN
 app.get("/login", function(req, res) {
-    res.render("login");
+    res.render("login", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
 })
 app.post("/login", passport.authenticate("local", {
     successRedirect: "/login",
@@ -210,12 +531,6 @@ app.get("/logout", function(req, res) {
     res.redirect("/");
 })
 
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
 
 app.listen(PORT, function() {
     console.log("Research Paper Application has Started!")
