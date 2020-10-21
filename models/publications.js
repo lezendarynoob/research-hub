@@ -11,7 +11,8 @@ var publicationDetailsSchema = new mongoose.Schema({
     issue_number: String,
     page_number: String,
     issn_number: String,
-    pindexing: String
+    pindexing: String,
+    fileURI: String
 
 
 });
