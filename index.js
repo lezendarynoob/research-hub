@@ -254,17 +254,6 @@ app.get("/profile/edit", function(req, res) {
     });
 });
 
-// app.post('/profile/edit', async function(req, res) {
-//     let user = User.findById(req.user._id);
-//     user.ScorpusId = req.body.ScorpusId;
-//     user.OrchidId = req.body.OrchidId;
-//     user.GoogleScholarId = req.body.GoogleScholarId;
-//     user.WebOfScience = req.body.WebOfScience;
-//     //similarly change other fields here
-//     await user.save();
-//     res.redirect('/profile');
-// });
-
 
 // 
 app.post('/profile/edit', async function(req, res) {
@@ -504,14 +493,16 @@ function updatestupubRecord(req, res) {
         _id: req.body.pubid
     }, (err, pub) => {
         //this will give you the document what you want to update.. then 
-        pub.author = req.body.author;
-        pub.publication_title = req.body.publication_title;
-        pub.journal_name = req.body.journal_name;
-        pub.volume_number = req.body.volume_number;
-        pub.issue_number = req.body.issue_number;
-        pub.page_number = req.body.page_number;
-        pub.issn_number = req.body.issn_number;
-        pub.pindexing = req.body.pindexing;
+        pub.studentName = req.body.student_name;
+        pub.enrollmentNum = req.body.enrollment_number;
+        pub.semester = req.body.semester;
+        pub.publicationTitle = req.body.program_studpub;
+        pub.journalName = req.body.journal_name_studpub;
+        pub.volumeNum = req.body.volume_number_studpub;
+        pub.issueNum = req.body.issue_number_studpub;
+        pub.pageNum = req.body.page_number_studpub;
+        pub.issnNum = req.body.issn_number_studpub;
+        pub.indexing = req.body.indexing_studpub;
         // then save that document
         pub.save();
 
@@ -624,6 +615,57 @@ app.get("/fundprj/new", function(req, res) {
         OrchidId: req.user.OrchidId
     });
 })
+
+app.get("/fundprj/edit", async function(req, res) {
+    console.log("Edit Profile")
+    let publication = await fundedProject.findById(req.query.puid)
+    res.render("edit_funded_project", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId,
+
+        namePrincipalInvestigator: publication.namePrincipalInvestigator,
+        nameCoInvestigator: publication.nameCoInvestigator,
+        title: publication.title,
+        fundingAgency: publication.fundingAgency,
+        overallCost: publication.overallCost,
+        startDate: publication.startDate,
+        EndDate: publication.EndDate,
+        pubid: publication._id
+
+    });
+})
+app.post('/fundprj/edit', async function(req, res) {
+    updatepubRecord(req, res);
+    res.redirect('/fundprj');
+
+});
+
+function updatepubRecord(req, res) {
+    fundedProject.findOne({
+        _id: req.body.pubid
+    }, (err, pub) => {
+        //this will give you the document what you want to update.. then 
+        pub.namePrincipalInvestigator = req.body.principal_investigator;
+        pub.nameCoInvestigator = req.body.co_investigator;
+        pub.title = req.body.title_fund_prj;
+        pub.fundingAgency = req.body.funding_agency;
+        pub.overallCost = req.body.Overall_cost;
+        pub.startDate = req.body.start_date;
+        pub.EndDate = req.body.end_date;
+        // then save that document
+        pub.save();
+
+    });
+
+}
+
 
 // Funded Project Ends
 app.get("/publication/:id", function(req, res) {
