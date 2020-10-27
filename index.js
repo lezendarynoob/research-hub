@@ -120,7 +120,7 @@ app.post("/publication", function(req, res) {
     let sampleFile = req.files.pubfile;
 
     // Use the mv() method to place the file somewhere on your server
-    let path =  issn_number + Date.now() + sampleFile.name;
+    let path = issn_number + Date.now() + sampleFile.name;
     sampleFile.mv(__dirname + '/public/uploads/' + path, function(err) {
         if (err)
             return res.status(500).send(err);
@@ -199,9 +199,12 @@ app.get("/profile/edit", function(req, res) {
     });
 });
 
-app.post('/profile/edit', async function(req, res){
+app.post('/profile/edit', async function(req, res) {
     let user = User.findById(req.user._id);
     user.ScorpusId = req.body.ScorpusId;
+    user.OrchidId = req.body.OrchidId;
+    user.GoogleScholarId = req.body.GoogleScholarId;
+    user.WebOfScience = req.body.WebOfScience;
     //similarly change other fields here
     await user.save();
     res.redirect('/profile');
