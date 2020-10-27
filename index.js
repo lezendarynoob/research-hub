@@ -199,16 +199,43 @@ app.get("/profile/edit", function(req, res) {
     });
 });
 
+// app.post('/profile/edit', async function(req, res) {
+//     let user = User.findById(req.user._id);
+//     user.ScorpusId = req.body.ScorpusId;
+//     user.OrchidId = req.body.OrchidId;
+//     user.GoogleScholarId = req.body.GoogleScholarId;
+//     user.WebOfScience = req.body.WebOfScience;
+//     //similarly change other fields here
+//     await user.save();
+//     res.redirect('/profile');
+// });
+
+
+// 
 app.post('/profile/edit', async function(req, res) {
-    let user = User.findById(req.user._id);
-    user.ScorpusId = req.body.ScorpusId;
-    user.OrchidId = req.body.OrchidId;
-    user.GoogleScholarId = req.body.GoogleScholarId;
-    user.WebOfScience = req.body.WebOfScience;
-    //similarly change other fields here
-    await user.save();
-    res.redirect('/profile');
+    updateRecord(req, res);
+    res.redirect('/login');
+
 });
+
+function updateRecord(req, res) {
+    User.findOne({
+        _id: req.user._id
+    }, (err, user) => {
+        //this will give you the document what you want to update.. then 
+        user.ScorpusId = req.body.ScorpusId;
+        user.OrchidId = req.body.OrchidId;
+        user.GoogleScholarId = req.body.GoogleScholarId;
+        user.WebOfScience = req.body.WebOfScience; //so on and so forth
+
+        // then save that document
+        user.save();
+
+    });
+
+}
+// 
+
 
 
 //SET TARGETcurrentUser: req.user.firstName
@@ -230,6 +257,7 @@ app.get("/settarget", function(req, res) {
         }
     })
 })
+
 
 app.post("/settarget", function(req, res) {
     var category_set_trgt = req.body.category_set_trgt;
