@@ -380,9 +380,11 @@ app.get("/studpub", async function(req, res) {
     }
 });
 
+
 app.post("/studpub", function(req, res) {
     var studentName = req.body.student_name;
     var enrollmentNumber = req.body.enrollment_number;
+    var volume_number = req.body.volume_number_studpub;
     var semester = req.body.semester;
     var program = req.body.program_studpub;
     var category = req.body.category_studpub;
@@ -409,20 +411,22 @@ app.post("/studpub", function(req, res) {
             return res.status(500).send(err);
 
         res.send('File uploaded!');
+        return;
     });
 
 
     var newStuPublication = {
         studentName: studentName,
-        enrollmentNumber: enrollmentNumber,
+        enrollmentNum: enrollmentNumber,
         semester: semester,
         program: program,
         category: category,
-        pubTitle: pubTitle,
+        publicationTitle: pubTitle,
         journalName: journalName,
+        volumeNum: volume_number,
         issueNum: issueNum,
-        pageNumber: pageNumber,
-        issnNumber: issnNumber,
+        pageNum: pageNumber,
+        issnNum: issnNumber,
         indexing: indexing
     }
     studentPublicationDetails.create(newStuPublication, async function(err, newStuPublication) {
@@ -446,6 +450,7 @@ app.post("/studpub", function(req, res) {
     })
 
 })
+
 app.get("/studpub/new", function(req, res) {
     res.render("student_publication", {
         currentUser: req.user.firstName,
@@ -459,6 +464,62 @@ app.get("/studpub/new", function(req, res) {
         OrchidId: req.user.OrchidId
     });
 })
+app.get("/studpub/edit", async function(req, res) {
+    console.log("Edit Profile")
+    let publication = await studentPublicationDetails.findById(req.query.puid)
+    res.render("student_publication_edit", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId,
+
+
+        student_name: publication.studentName,
+        enrollment_number: publication.enrollmentNum,
+        semester: publication.semester,
+        program_studpub: publication.program,
+        author_studpub: publication.authorName,
+        journal_name_studpub: publication.journalName,
+        volume_number_studpub: publication.volumeNum,
+        issue_number_studpub: publication.issueNum,
+        page_number_studpub: publication.pageNum,
+        issn_number_studpub: publication.issnNum,
+        indexing_studpub: publication.indexing,
+        pubid: publication._id
+    });
+})
+app.post('/studpub/edit', async function(req, res) {
+    updatestupubRecord(req, res);
+    res.redirect('/studpub');
+
+});
+
+function updatestupubRecord(req, res) {
+    studentPublicationDetails.findOne({
+        _id: req.body.pubid
+    }, (err, pub) => {
+        //this will give you the document what you want to update.. then 
+        pub.author = req.body.author;
+        pub.publication_title = req.body.publication_title;
+        pub.journal_name = req.body.journal_name;
+        pub.volume_number = req.body.volume_number;
+        pub.issue_number = req.body.issue_number;
+        pub.page_number = req.body.page_number;
+        pub.issn_number = req.body.issn_number;
+        pub.pindexing = req.body.pindexing;
+        // then save that document
+        pub.save();
+
+    });
+
+}
+
+
 
 
 // STUDENT PUBLICATION ENDS
