@@ -98,6 +98,9 @@ app.get("/publication", async function(req, res) {
 });
 
 
+
+
+
 app.post("/publication", function(req, res) {
     var Category = req.body.category;
     var author = req.body.author;
@@ -177,6 +180,58 @@ app.get("/publication/new", function(req, res) {
         OrchidId: req.user.OrchidId
     });
 })
+app.get("/publication/edit", async function(req, res) {
+    console.log("Edit Profile")
+    let publication = await publicationDetails.findById(req.query.puid)
+    res.render("editPublication", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId,
+        author: publication.author,
+        publication_title: publication.publication_title,
+        journal_name: publication.journal_name,
+        volume_number: publication.volume_number,
+        issue_number: publication.issue_number,
+        page_number: publication.page_number,
+        issn_number: publication.issn_number,
+        pindexing: publication.pindexing,
+        pubid: publication._id
+    });
+})
+app.post('/publication/edit', async function(req, res) {
+    updatepubRecord(req, res);
+    res.redirect('/publication');
+
+});
+
+function updatepubRecord(req, res) {
+    publicationDetails.findOne({
+        _id: req.body.pubid
+    }, (err, pub) => {
+        //this will give you the document what you want to update.. then 
+        pub.author = req.body.author;
+        pub.publication_title = req.body.publication_title;
+        pub.journal_name = req.body.journal_name;
+        pub.volume_number = req.body.volume_number;
+        pub.issue_number = req.body.issue_number;
+        pub.page_number = req.body.page_number;
+        pub.issn_number = req.body.issn_number;
+        pub.pindexing = req.body.pindexing;
+        // then save that document
+        pub.save();
+
+    });
+
+}
+
+
+
 
 // Publication Ends
 
