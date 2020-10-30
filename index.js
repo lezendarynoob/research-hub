@@ -10,7 +10,8 @@ const publicationDetails = require('./models/publications');
 const targetDetails = require('./models/setTarget');
 const User = require('./models/user');
 const studentPublicationDetails = require('./models/studentPub')
-const fundedProject = require('./models/fundedProject.js')
+const fundedProject = require('./models/fundedProject.js');
+const studentPub = require('./models/studentPub');
 
 mongoose.connect("mongodb://localhost/researchApp", {
     useUnifiedTopology: true,
@@ -61,9 +62,12 @@ var currentDateTime = new Date();
 
 // Login Page
 app.get('/', function(req, res) {
-
     if (req.user) {
-        res.redirect(301, '/login')
+        if (req.user.isAdmin == 1) {
+            res.redirect(301, '/admlogin')
+        } else {
+            res.redirect(301, '/login')
+        }
     } else {
         res.render('home');
     }
@@ -95,6 +99,31 @@ app.get("/publication", async function(req, res) {
     } catch (err) {
         console.log(err);
     }
+});
+
+app.get("/admpublication", async function(req, res) {
+
+    // Pass All publications
+    let publications = []
+    await publicationDetails.find({}, async function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            publications = result;
+        }
+    });
+
+    res.render("admpapers", {
+        rPapers: publications,
+        currentUser: req.user.firstName,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+
 });
 
 
@@ -370,6 +399,36 @@ app.get("/studpub", async function(req, res) {
 });
 
 
+
+app.get("/admstudpub", async function(req, res) {
+
+    // Pass all student Publication here
+    let studPublications = []
+
+    await studentPub.find({}, async function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            studPublications = result;
+        }
+    });
+
+    res.render("admstudent_view", {
+        sPapers: studPublications,
+        currentUser: req.user.firstName,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+
+
+});
+
+
+
 app.post("/studpub", function(req, res) {
     var studentName = req.body.student_name;
     var enrollmentNumber = req.body.enrollment_number;
@@ -467,7 +526,6 @@ app.get("/studpub/edit", async function(req, res) {
         GoogleScholarId: req.user.GoogleScholarId,
         OrchidId: req.user.OrchidId,
 
-
         student_name: publication.studentName,
         enrollment_number: publication.enrollmentNum,
         semester: publication.semester,
@@ -540,6 +598,33 @@ app.get("/fundprj", async function(req, res) {
     } catch (err) {
         console.log(err);
     }
+});
+
+
+app.get("/admfundprj", async function(req, res) {
+
+    // Pass all funded Project
+    let fundProject = []
+    await fundedProject.find({}, async function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            fundProject = result;
+        }
+    });
+
+
+    res.render("admfunded_project_view", {
+        fDetails: fundProject,
+        currentUser: req.user.firstName,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+
 });
 
 app.post("/fundprj", function(req, res) {
@@ -642,12 +727,12 @@ app.get("/fundprj/edit", async function(req, res) {
     });
 })
 app.post('/fundprj/edit', async function(req, res) {
-    updatepubRecord(req, res);
+    updatefundpubRecord(req, res);
     res.redirect('/fundprj');
 
 });
 
-function updatepubRecord(req, res) {
+function updatefundpubRecord(req, res) {
     fundedProject.findOne({
         _id: req.body.pubid
     }, (err, pub) => {
@@ -688,8 +773,8 @@ app.post("/register", function(req, res) {
         ScorpusId: req.body.ScorpusId,
         GoogleScholarId: req.body.GoogleScholarId,
         OrchidId: req.body.OrchidId,
-        emailId: req.body.email
-
+        emailId: req.body.email,
+        isAdmin: req.body.isAdmin
     });
 
     User.register(user, req.body.password, function(err, user) {
@@ -706,6 +791,20 @@ app.post("/register", function(req, res) {
 
 
 //LOGIN
+app.get("/admlogin", function(req, res) {
+    res.render("admlogin", {
+        currentUser: req.user.firstName,
+        username: req.user.username,
+        grade: req.user.Grade,
+        lastName: req.user.lastName,
+        School: req.user.School,
+        WebOfScience: req.user.WebOfScience,
+        ScorpusId: req.user.ScorpusId,
+        GoogleScholarId: req.user.GoogleScholarId,
+        OrchidId: req.user.OrchidId
+    });
+})
+
 app.get("/login", function(req, res) {
     res.render("login", {
         currentUser: req.user.firstName,
@@ -720,7 +819,7 @@ app.get("/login", function(req, res) {
     });
 })
 app.post("/login", passport.authenticate("local", {
-    successRedirect: "/login",
+    successRedirect: "/",
     failureRedirect: "/"
 }), function(req, res) {
 
@@ -729,8 +828,11 @@ app.post("/login", passport.authenticate("local", {
 //LOGOUT 
 app.get("/logout", function(req, res) {
     req.logout();
-
-    res.redirect("/");
+    // res.clearCookie('your_key');
+    req.session.destroy(function(err) {
+        res.redirect('/');
+    });
+    // res.redirect("/");
 })
 
 
