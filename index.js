@@ -102,28 +102,28 @@ app.get("/publication", async function(req, res) {
 });
 
 app.get("/admpublication", async function(req, res) {
+    if (req.user.isAdmin == 1) {
+        // Pass All publications
+        let publications = []
+        await publicationDetails.find({}, async function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                publications = result;
+            }
+        });
 
-    // Pass All publications
-    let publications = []
-    await publicationDetails.find({}, async function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            publications = result;
-        }
-    });
-
-    res.render("admpapers", {
-        rPapers: publications,
-        currentUser: req.user.firstName,
-        lastName: req.user.lastName,
-        School: req.user.School,
-        WebOfScience: req.user.WebOfScience,
-        ScorpusId: req.user.ScorpusId,
-        GoogleScholarId: req.user.GoogleScholarId,
-        OrchidId: req.user.OrchidId
-    });
-
+        res.render("admpapers", {
+            rPapers: publications,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+    }
 });
 
 
@@ -401,30 +401,30 @@ app.get("/studpub", async function(req, res) {
 
 
 app.get("/admstudpub", async function(req, res) {
+    if (req.user.isAdmin == 1) {
+        // Pass all student Publication here
+        let studPublications = []
 
-    // Pass all student Publication here
-    let studPublications = []
+        await studentPub.find({}, async function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                studPublications = result;
+            }
+        });
 
-    await studentPub.find({}, async function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            studPublications = result;
-        }
-    });
+        res.render("admstudent_view", {
+            sPapers: studPublications,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
 
-    res.render("admstudent_view", {
-        sPapers: studPublications,
-        currentUser: req.user.firstName,
-        lastName: req.user.lastName,
-        School: req.user.School,
-        WebOfScience: req.user.WebOfScience,
-        ScorpusId: req.user.ScorpusId,
-        GoogleScholarId: req.user.GoogleScholarId,
-        OrchidId: req.user.OrchidId
-    });
-
-
+    }
 });
 
 
@@ -602,28 +602,32 @@ app.get("/fundprj", async function(req, res) {
 
 
 app.get("/admfundprj", async function(req, res) {
-
-    // Pass all funded Project
-    let fundProject = []
-    await fundedProject.find({}, async function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            fundProject = result;
-        }
-    });
+    if (req.user.isAdmin == 1) {
 
 
-    res.render("admfunded_project_view", {
-        fDetails: fundProject,
-        currentUser: req.user.firstName,
-        lastName: req.user.lastName,
-        School: req.user.School,
-        WebOfScience: req.user.WebOfScience,
-        ScorpusId: req.user.ScorpusId,
-        GoogleScholarId: req.user.GoogleScholarId,
-        OrchidId: req.user.OrchidId
-    });
+        // Pass all funded Project
+        let fundProject = []
+        await fundedProject.find({}, async function(err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                fundProject = result;
+            }
+        });
+
+
+        res.render("admfunded_project_view", {
+            fDetails: fundProject,
+            currentUser: req.user.firstName,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+
+    }
 
 });
 
@@ -792,34 +796,40 @@ app.post("/register", function(req, res) {
 
 //LOGIN
 app.get("/admlogin", function(req, res) {
-    res.render("admlogin", {
-        currentUser: req.user.firstName,
-        username: req.user.username,
-        grade: req.user.Grade,
-        lastName: req.user.lastName,
-        School: req.user.School,
-        WebOfScience: req.user.WebOfScience,
-        ScorpusId: req.user.ScorpusId,
-        GoogleScholarId: req.user.GoogleScholarId,
-        OrchidId: req.user.OrchidId
-    });
+    if (req.user.isAdmin == 1) {
+        res.render("admlogin", {
+            currentUser: req.user.firstName,
+            username: req.user.username,
+            grade: req.user.Grade,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+    }
 })
 
 app.get("/login", function(req, res) {
-    res.render("login", {
-        currentUser: req.user.firstName,
-        username: req.user.username,
-        grade: req.user.Grade,
-        lastName: req.user.lastName,
-        School: req.user.School,
-        WebOfScience: req.user.WebOfScience,
-        ScorpusId: req.user.ScorpusId,
-        GoogleScholarId: req.user.GoogleScholarId,
-        OrchidId: req.user.OrchidId
-    });
+    if (req.user.isAdmin == 1) {
+        res.redirect("/admlogin")
+    } else {
+        res.render("login", {
+            currentUser: req.user.firstName,
+            username: req.user.username,
+            grade: req.user.Grade,
+            lastName: req.user.lastName,
+            School: req.user.School,
+            WebOfScience: req.user.WebOfScience,
+            ScorpusId: req.user.ScorpusId,
+            GoogleScholarId: req.user.GoogleScholarId,
+            OrchidId: req.user.OrchidId
+        });
+    }
 })
 app.post("/login", passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/login",
     failureRedirect: "/"
 }), function(req, res) {
 
@@ -828,11 +838,8 @@ app.post("/login", passport.authenticate("local", {
 //LOGOUT 
 app.get("/logout", function(req, res) {
     req.logout();
-    // res.clearCookie('your_key');
-    req.session.destroy(function(err) {
-        res.redirect('/');
-    });
-    // res.redirect("/");
+
+    res.redirect("/");
 })
 
 
