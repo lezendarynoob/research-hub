@@ -1,6 +1,6 @@
-<%- include("partials/header.ejs") %>
+<!-- <%- include("partials/header.ejs") %>
     <div class="row">
-        <%- include("partials/navbar.ejs") %>
+        <%- include("partials/admin_navbar.ejs") %>
             <div class="col-md-8 left">
                 <p class="heading-pg">Targets</p>
 
@@ -9,77 +9,65 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th scope="col">Student Name</th>
-                                <th scope="col">Enrollment Number</th>
-                                <th scope="col">Semester</th>
-                                <th scope="col">Program</th>
                                 <th scope="col">Category</th>
-                                <th scope="col">Author Name</th>
-                                <th scope="col">Publication Title</th>
+                                <th scope="col">Author</th>
                                 <th scope="col">Journal Name</th>
+                                <th scope="col">Publication Title</th>
                                 <th scope="col">Volume Number</th>
                                 <th scope="col">Issue Number</th>
                                 <th scope="col">Page Number</th>
-                                <th scope="col">ISSN Number</th>
-                                <th scope="col">Indexing</th>
+                                <th scope="col">Issn Number</th>
+                                <th scope="col">Indexing Number</th>
                             </tr>
                         </thead>
-                        <% sPapers.forEach(function(i){ %>
+                        <% rPapers.forEach(function(i){ %>
                             <tbody>
                                 <tr>
                                     <td></td>
 
                                     <td>
-                                        <%= i.studentName %>
+                                        <%= i.Category %>
                                     </td>
                                     <td>
-                                        <%= i.enrollmentNum %>
+                                        <%= i.author %>
                                     </td>
                                     <td>
-                                        <%= i.semester %>
+                                        <%= i.journal_name %>
                                     </td>
                                     <td>
-                                        <%= i.program %>
+                                        <%= i.publication_title %>
                                     </td>
                                     <td>
-                                        <%= i.category %>
+                                        <%= i.volume_number %>
                                     </td>
                                     <td>
-                                        <%= i.authorName %>
+                                        <%= i.issue_number %>
                                     </td>
                                     <td>
-                                        <%= i.publicationTitle %>
+                                        <%= i.page_number %>
                                     </td>
                                     <td>
-                                        <%= i.journalName %>
+                                        <%= i.issn_number %>
                                     </td>
                                     <td>
-                                        <%= i.volumeNum %>
+                                        <%= i.pindexing %>
                                     </td>
                                     <td>
-                                        <%= i.issueNum %>
-                                    </td>
-                                    <td>
-                                        <%= i.pageNum %>
-                                    </td>
-                                    <td>
-                                        <%= i.issnNum %>
-                                    </td>
-                                    <td>
-                                        <%= i.indexing %>
-                                    </td>
-                                    <td>
-                                        <a href="studpub/edit?puid=<%= i._id %>">Edit</a>
+                                        <a href="publication/edit?puid=<%= i._id %>">Edit</a>
                                     </td>
                                     <td>
                                         <a href="#" style="color: red;">Delete</a>
                                     </td>
+
+
                                 </tr>
+
                             </tbody>
+
                             <% }); %>
                     </table>
                 </div>
             </div>
 
     </div>
-    <%- include("partials/footer.ejs") %>
+    <%- include("partials/footer.ejs") %> -->

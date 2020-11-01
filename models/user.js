@@ -14,6 +14,7 @@ var UserSchema = new mongoose.Schema({
     GoogleScholarId: String,
     OrchidId: String,
     emailId: String,
+    isAdmin: Boolean,
     studPublications: [ObjectId],
     publications: [ObjectId],
     fundProjects: [ObjectId]

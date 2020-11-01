@@ -1,6 +1,6 @@
 <%- include("partials/header.ejs") %>
     <div class="row">
-        <%- include("partials/navbar.ejs") %>
+        <%- include("partials/admin_navbar.ejs") %>
             <div class="col-md-8 left">
                 <p class="heading-pg">Targets</p>
 
@@ -9,61 +9,49 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Author</th>
-                                <th scope="col">Journal Name</th>
-                                <th scope="col">Publication Title</th>
-                                <th scope="col">Volume Number</th>
-                                <th scope="col">Issue Number</th>
-                                <th scope="col">Page Number</th>
-                                <th scope="col">Issn Number</th>
-                                <th scope="col">Indexing Number</th>
+                                <th scope="col">Name of Principal Investigator</th>
+                                <th scope="col">Name of Co-Investigator</th>
+                                <th scope="col">Title of the Project</th>
+                                <th scope="col">Funding Agency</th>
+                                <th scope="col">Overall Cost (in RS.)</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
                             </tr>
                         </thead>
-                        <% rPapers.forEach(function(i){ %>
+                        <% fDetails.forEach(function(i){ %>
                             <tbody>
                                 <tr>
                                     <td></td>
 
                                     <td>
-                                        <%= i.Category %>
+                                        <%= i.namePrincipalInvestigator %>
                                     </td>
                                     <td>
-                                        <%= i.author %>
+                                        <%= i.nameCoInvestigator %>
                                     </td>
                                     <td>
-                                        <%= i.journal_name %>
+                                        <%= i.title %>
                                     </td>
                                     <td>
-                                        <%= i.publication_title %>
+                                        <%= i.fundingAgency %>
                                     </td>
                                     <td>
-                                        <%= i.volume_number %>
+                                        <%= i.overallCost %>
                                     </td>
                                     <td>
-                                        <%= i.issue_number %>
+                                        <%= i.startDate %>
                                     </td>
                                     <td>
-                                        <%= i.page_number %>
+                                        <%= i.EndDate %>
                                     </td>
                                     <td>
-                                        <%= i.issn_number %>
-                                    </td>
-                                    <td>
-                                        <%= i.pindexing %>
-                                    </td>
-                                    <td>
-                                        <a href="publication/edit?puid=<%= i._id %>">Edit</a>
+                                        <a href="fundprj/edit?puid=<%= i._id %>">Edit</a>
                                     </td>
                                     <td>
                                         <a href="#" style="color: red;">Delete</a>
                                     </td>
-
-
                                 </tr>
-
                             </tbody>
-
                             <% }); %>
                     </table>
                 </div>
