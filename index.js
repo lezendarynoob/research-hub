@@ -80,14 +80,21 @@ app.get("/publication", async function(req, res) {
     if (req.user.isAdmin != 1) {
         try {
             let publications = []
+            let canDelete = []
 
             for (let i = 0; i < req.user.publications.length; i++) {
                 let pub = await publicationDetails.findById(req.user.publications[i]);
                 publications.push(pub);
+                if(pub.createdBy == req.user._id){
+                    canDelete.push(true);
+                }else{
+                    canDelete.push(false);
+                }
             }
 
             res.render("papers", {
                 rPapers: publications,
+                canDelete: canDelete,
                 currentUser: req.user.firstName,
                 lastName: req.user.lastName,
                 School: req.user.School,
@@ -137,7 +144,6 @@ app.get("/admpublication", async function(req, res) {
 
 app.post("/publication", function(req, res) {
     var Category = req.body.category;
-    var author = req.body.author;
     var title = req.body.title;
     var journal_name = req.body.journal_name;
     var publication_title = req.body.publication_title;
@@ -168,7 +174,6 @@ app.post("/publication", function(req, res) {
 
     var newPublication = {
         Category: Category,
-        author: author,
         title: title,
         journal_name: journal_name,
         publication_title: publication_title,
@@ -177,7 +182,8 @@ app.post("/publication", function(req, res) {
         page_number: page_number,
         issn_number: issn_number,
         pindexing: pindexing,
-        fileURI: path
+        fileURI: path,
+        createdBy: req.user._id
 
     }
     publicationDetails.create(newPublication, async function(err, newPublication) {
@@ -185,6 +191,7 @@ app.post("/publication", function(req, res) {
             console.log(err);
         } else {
             //redirect back to the research papers Page
+            var author = '';
             for (let i = 0; i < users.length; i++) {
                 let user = await User.findOne({
                     username: users[i].trim()
@@ -192,6 +199,12 @@ app.post("/publication", function(req, res) {
                 if (user) {
                     user.publications.push(newPublication._id);
                     await user.save();
+                    if(i === users.length - 1){
+                        author = author + user.firstName + ' ' + user.lastName
+                    }else{
+                        author = author + user.firstName + ' ' + user.lastName + ','
+                    }
+                    
                 } else {
                     continue;
                 }
@@ -264,7 +277,14 @@ function updatepubRecord(req, res) {
 
 }
 
-
+app.post('/delete', async function(req, res){
+    let pub = await publicationDetails.findById(req.body.id);
+    if(req.user.isAdmin == 1 || pub.createdBy == req.user._id){
+        await pub.deleteOne();
+        
+    }
+    res.redirect('/publication');
+});
 
 
 // Publication Ends
