@@ -12,6 +12,7 @@ const User = require('./models/user');
 const studentPublicationDetails = require('./models/studentPub')
 const fundedProject = require('./models/fundedProject.js');
 const studentPub = require('./models/studentPub');
+const e = require('express');
 
 mongoose.connect("mongodb://localhost/researchApp", {
     useUnifiedTopology: true,
@@ -76,28 +77,30 @@ app.get('/', function(req, res) {
 //PUBLICATION 
 app.get("/publication", async function(req, res) {
 
-    try {
-        let publications = []
+    if (req.user.isAdmin != 1) {
+        try {
+            let publications = []
 
-        for (let i = 0; i < req.user.publications.length; i++) {
-            let pub = await publicationDetails.findById(req.user.publications[i]);
-            publications.push(pub);
+            for (let i = 0; i < req.user.publications.length; i++) {
+                let pub = await publicationDetails.findById(req.user.publications[i]);
+                publications.push(pub);
+            }
+
+            res.render("papers", {
+                rPapers: publications,
+                currentUser: req.user.firstName,
+                lastName: req.user.lastName,
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
+            });
+
+
+        } catch (err) {
+            console.log(err);
         }
-
-        res.render("papers", {
-            rPapers: publications,
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School: req.user.School,
-            WebOfScience: req.user.WebOfScience,
-            ScorpusId: req.user.ScorpusId,
-            GoogleScholarId: req.user.GoogleScholarId,
-            OrchidId: req.user.OrchidId
-        });
-
-
-    } catch (err) {
-        console.log(err);
     }
 });
 
@@ -123,6 +126,8 @@ app.get("/admpublication", async function(req, res) {
             GoogleScholarId: req.user.GoogleScholarId,
             OrchidId: req.user.OrchidId
         });
+    } else {
+        res.redirect("/publication")
     }
 });
 
@@ -373,28 +378,32 @@ app.get("/settarget/new", function(req, res) {
 // Student Publication Start
 
 app.get("/studpub", async function(req, res) {
-    try {
-        let studPublications = []
+    if (req.user.isAdmin != 1) {
+        try {
+            let studPublications = []
 
-        for (let i = 0; i < req.user.studPublications.length; i++) {
-            let spub = await studentPublicationDetails.findById(req.user.studPublications[i]);
-            studPublications.push(spub);
+            for (let i = 0; i < req.user.studPublications.length; i++) {
+                let spub = await studentPublicationDetails.findById(req.user.studPublications[i]);
+                studPublications.push(spub);
+            }
+
+            res.render("student_view", {
+                sPapers: studPublications,
+                currentUser: req.user.firstName,
+                lastName: req.user.lastName,
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
+            });
+
+
+        } catch (err) {
+            console.log(err);
         }
-
-        res.render("student_view", {
-            sPapers: studPublications,
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School: req.user.School,
-            WebOfScience: req.user.WebOfScience,
-            ScorpusId: req.user.ScorpusId,
-            GoogleScholarId: req.user.GoogleScholarId,
-            OrchidId: req.user.OrchidId
-        });
-
-
-    } catch (err) {
-        console.log(err);
+    } else {
+        res.redirect("/admstudpub")
     }
 });
 
@@ -424,6 +433,8 @@ app.get("/admstudpub", async function(req, res) {
             OrchidId: req.user.OrchidId
         });
 
+    } else {
+        res.redirect("/studpub");
     }
 });
 
@@ -575,28 +586,34 @@ function updatestupubRecord(req, res) {
 
 // Funded Project Starts
 app.get("/fundprj", async function(req, res) {
-    try {
-        let fundProject = []
+    if (req.user.isAdmin != 1) {
 
-        for (let i = 0; i < req.user.fundProjects.length; i++) {
-            let fpro = await fundedProject.findById(req.user.fundProjects[i]);
-            fundProject.push(fpro);
+
+        try {
+            let fundProject = []
+
+            for (let i = 0; i < req.user.fundProjects.length; i++) {
+                let fpro = await fundedProject.findById(req.user.fundProjects[i]);
+                fundProject.push(fpro);
+            }
+
+            res.render("funded_project_view", {
+                fDetails: fundProject,
+                currentUser: req.user.firstName,
+                lastName: req.user.lastName,
+                School: req.user.School,
+                WebOfScience: req.user.WebOfScience,
+                ScorpusId: req.user.ScorpusId,
+                GoogleScholarId: req.user.GoogleScholarId,
+                OrchidId: req.user.OrchidId
+            });
+
+
+        } catch (err) {
+            console.log(err);
         }
-
-        res.render("funded_project_view", {
-            fDetails: fundProject,
-            currentUser: req.user.firstName,
-            lastName: req.user.lastName,
-            School: req.user.School,
-            WebOfScience: req.user.WebOfScience,
-            ScorpusId: req.user.ScorpusId,
-            GoogleScholarId: req.user.GoogleScholarId,
-            OrchidId: req.user.OrchidId
-        });
-
-
-    } catch (err) {
-        console.log(err);
+    } else {
+        res.redirect("/admfundprj")
     }
 });
 
@@ -808,6 +825,8 @@ app.get("/admlogin", function(req, res) {
             GoogleScholarId: req.user.GoogleScholarId,
             OrchidId: req.user.OrchidId
         });
+    } else {
+        res.redirect("/login")
     }
 })
 
